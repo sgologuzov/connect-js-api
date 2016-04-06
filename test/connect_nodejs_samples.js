@@ -1,8 +1,8 @@
 'use strict';
 
-var ProtoMessages = require('../lib/proto_messages');
-var AdapterTLS = require('../lib/adapter_tls');
-var Stream = require('../lib/stream');
+var ProtoMessages = require('connect-protobuf-messages');
+var AdapterTLS = require('connect-js-adapter-tls');
+var EncodeDecode = require('connect-js-encode-decode');
 var Connect = require('../lib/connect');
 var state = require('../lib/state');
 var ping = require('./tools/ping');
@@ -16,11 +16,11 @@ describe('connect-nodejs-sample', function () {
     beforeAll(function () {
         protoMessages = new ProtoMessages([
             {
-                file: 'test/proto/CommonMessages.proto',
+                file: 'node_modules/connect-protobuf-messages/src/main/protobuf/CommonMessages.proto',
                 protoPayloadType: 'ProtoPayloadType'
             },
             {
-                file: 'test/proto/OpenApiMessages.proto',
+                file: 'node_modules/connect-protobuf-messages/src/main/protobuf/OpenApiMessages.proto',
                 protoPayloadType: 'ProtoOAPayloadType'
             }
         ]);
@@ -30,12 +30,12 @@ describe('connect-nodejs-sample', function () {
             port: 5032
         });
 
-        var stream = new Stream();
+        var encodeDecode = new EncodeDecode();
 
         connect = new Connect({
             adapter: adapter,
-            protocol: protoMessages,
-            stream: stream
+            encodeDecode: encodeDecode,
+            protocol: protoMessages
         });
 
         ping = ping.bind(connect);
